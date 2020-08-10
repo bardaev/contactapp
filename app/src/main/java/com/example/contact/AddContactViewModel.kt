@@ -1,6 +1,7 @@
 package com.example.contact
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import com.example.contact.database.AppDatabase
 import com.example.contact.database.Contact
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class AddContactViewModel(app: Application): AndroidViewModel(app), CoroutineScope {
+    var selectedImageUri: Uri? = null
     private var database: AppDatabase = AppDatabase.getDatabase(app)
     var groupId: Int = 0
 
@@ -23,6 +25,7 @@ class AddContactViewModel(app: Application): AndroidViewModel(app), CoroutineSco
 
     fun saveContact(contact: Contact) {
         launch(Dispatchers.IO) {
+            if (selectedImageUri != null) contact.photoUrl = selectedImageUri.toString()
             contactsDao.insert(contact)
         }
     }
