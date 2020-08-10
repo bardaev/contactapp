@@ -1,23 +1,40 @@
 package com.example.contact
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contact.database.ContactGroup
+import com.example.contact.database.ContactGroupWithContacts
 import kotlinx.android.synthetic.main.contact_group_card.view.*
 
-class ContactGroupsAdapter(val items: ArrayList<ContactGroup>, val context: Context): RecyclerView.Adapter<GroupsViewHolder>() {
+class ContactGroupsAdapter(private val items: List<ContactGroupWithContacts>,
+                           val context: Context,
+                           private val addContactViewModel: AddContactViewModel): RecyclerView.Adapter<GroupsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupsViewHolder {
         return GroupsViewHolder(LayoutInflater.from(context).inflate(R.layout.contact_group_card, parent, false))
     }
 
     override fun onBindViewHolder(holder: GroupsViewHolder, position: Int) {
-        holder.titleTxt?.text = items[position].name
-        holder.descriptionTxt?.text = items[position].description
-        holder.card.setCardBackgroundColor(context.resources.getColor(items[position].color))
+        val groupWithContacts = items[position]
+        val group = groupWithContacts.group!!
+
+        holder.titleTxt?.text = group.name
+        holder.descriptionTxt?.text = group.description
+        val hexColor = "#${java.lang.Integer.toHexString(group.color)}"
+        holder.card.setCardBackgroundColor(Color.parseColor(hexColor))
+
+        holder.countTxt.text = "${groupWithContacts.contacts.size}"
+
+        holder.buttonAdd.setOnClickListener {
+            val navController = it.findNavController()
+            addContactViewModel.groupId = group.id!!
+            navController.navigate(R.id.addContactFragment)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -29,4 +46,6 @@ class GroupsViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val titleTxt = view.titleTxt
     val descriptionTxt = view.descriptionTxt
     val card = view.card
+    val buttonAdd = view.imageAdd
+    val countTxt = view.countTxt
 }

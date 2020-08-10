@@ -6,7 +6,7 @@ import androidx.room.*
 interface ContactGroupsDao {
 
     @Query("SELECT * FROM groups")
-    fun getAll(): List<ContactGroup>
+    fun getAll(): List<ContactGroupWithContacts>
 
     @Insert
     fun insert(group: ContactGroup)

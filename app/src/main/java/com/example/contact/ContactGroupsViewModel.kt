@@ -6,26 +6,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.contact.database.AppDatabase
 import com.example.contact.database.ContactGroup
+import com.example.contact.database.ContactGroupWithContacts
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-class ContactGroupsViewModel(app: Application): AndroidViewModel(app) {
-    var groups: MutableLiveData<List<ContactGroup>> = MutableLiveData()
-    private var database = AppDatabase.getDatabase(app)
+class ContactGroupsViewModel(app: Application) : AndroidViewModel(app), CoroutineScope {
+    var groups: MutableLiveData<List<ContactGroupWithContacts>> = MutableLiveData()
+    private var database: AppDatabase = AppDatabase.getDatabase(app)
+
     private var groupsDao = database.getGroupsDao()
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
-    fun insertTestInformation() {
-        getContactGroups().forEach {
-            groupsDao.insert(it)
+    private  val job: Job = Job()
+
+
+    fun requestGroups() {
+        launch(Dispatchers.Main) {
+            groups.value = withContext(Dispatchers.Default) {
+                groupsDao.getAll()
+            }
         }
-        groups.value = groupsDao.getAll()
     }
-    fun getContactGroups(): ArrayList<ContactGroup> {
-        return arrayListOf(
-            ContactGroup(name = "Parents",description =  "My parents and family", color = R.color.yellow),
-            ContactGroup(name = "Work", description = "My colleagues and boss", color = R.color.blue),
-            ContactGroup(name = "Friends", description = "My friends and schoolmates", color = R.color.pink),
-            ContactGroup(name = "Someone I don't know", description = "Some people I met on the street", color =  R.color.white),
-            ContactGroup(name = "Other people of planet Earth", description = "Yeah, in case I will need to add them", color = R.color.colorPrimary),
-            ContactGroup(name = "People from the Milky Way", description = "The galaxy is our common home", color = R.color.colorAccent)
-        )
+
+
+    fun saveGroup(group: ContactGroup) {
+        launch(Dispatchers.Default) {
+            groupsDao.insert(group)
+        }
+        requestGroups()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job.cancel()
     }
 }
