@@ -24,16 +24,6 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_input_add"
-            android:tint="@color/white"
-            android:id="@+id/imageAdd"
-            app:layout_constraintTop_toTopOf="@+id/countTxt"
-            app:layout_constraintBottom_toBottomOf="@+id/countTxt"
-            app:layout_constraintStart_toEndOf="@+id/countTxt"
-            android:layout_marginStart="16dp"/>
 
         <ImageView
             android:layout_width="wrap_content"

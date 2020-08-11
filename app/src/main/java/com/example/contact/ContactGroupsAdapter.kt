@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.contact_group_card.view.*
 
 class ContactGroupsAdapter(private val items: List<ContactGroupWithContacts>,
                            val context: Context,
-                           private val addContactViewModel: AddContactViewModel): RecyclerView.Adapter<GroupsViewHolder>() {
+                           private val contactsViewModel: ContactsViewModel): RecyclerView.Adapter<GroupsViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupsViewHolder {
         return GroupsViewHolder(LayoutInflater.from(context).inflate(R.layout.contact_group_card, parent, false))
@@ -30,11 +30,17 @@ class ContactGroupsAdapter(private val items: List<ContactGroupWithContacts>,
 
         holder.countTxt.text = "${groupWithContacts.contacts.size}"
 
-        holder.buttonAdd.setOnClickListener {
+        holder.rootLayout.setOnClickListener {
+            contactsViewModel.contactGroup = groupWithContacts
             val navController = it.findNavController()
-            addContactViewModel.groupId = group.id!!
-            navController.navigate(R.id.addContactFragment)
+            navController.navigate(R.id.contactsFragment)
         }
+
+//        holder.buttonAdd.setOnClickListener {
+//            val navController = it.findNavController()
+//            addContactViewModel.groupId = group.id!!
+//            navController.navigate(R.id.addContactFragment)
+//        }
     }
 
     override fun getItemCount(): Int {
@@ -46,6 +52,6 @@ class GroupsViewHolder(view: View): RecyclerView.ViewHolder(view) {
     val titleTxt = view.titleTxt
     val descriptionTxt = view.descriptionTxt
     val card = view.card
-    val buttonAdd = view.imageAdd
     val countTxt = view.countTxt
+    val rootLayout = view.rootView
 }

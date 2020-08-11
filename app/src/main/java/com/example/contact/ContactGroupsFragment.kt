@@ -43,8 +43,8 @@ class ContactGroupsFragment: Fragment() {
         recycler.layoutManager = LinearLayoutManager(context)
         viewModel.groups.observe(viewLifecycleOwner, Observer<List<ContactGroupWithContacts>> {
             val mainActivity = activity as MainActivity
-            val addContactViewModel = ViewModelProviders.of(mainActivity).get(AddContactViewModel::class.java)
-            recycler.adapter = ContactGroupsAdapter(it, mainActivity, addContactViewModel)
+            val contactsViewModel = ViewModelProviders.of(mainActivity).get(ContactsViewModel::class.java)
+            recycler.adapter = ContactGroupsAdapter(it, mainActivity, contactsViewModel)
         })
 
         activity?.fab?.setOnClickListener {

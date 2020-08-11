@@ -13,4 +13,9 @@
     <fragment android:id="@+id/addContactFragment" android:name="com.example.contact.AddContactFragment"
         android:label="add_contact_fragment" tools:layout="@layout/add_contact_fragment"/>
 
+    <fragment android:id="@+id/contactsFragment" android:name="com.example.contact.ContactsFragment"
+        android:label="ContactsFragment">
+        <action android:id="@+id/action_contactsFragment_to_addContactFragment"
+            app:destination="@id/addContactFragment"/>
+    </fragment>
 </navigation>
